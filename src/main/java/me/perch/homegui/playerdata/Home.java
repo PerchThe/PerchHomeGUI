@@ -1,4 +1,4 @@
-package com.technovision.homegui.playerdata;
+package me.perch.homegui.playerdata;
 
 import org.bukkit.Material;
 

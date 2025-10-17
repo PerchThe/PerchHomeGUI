@@ -1,14 +1,11 @@
-name: HomeGUI
-version: 1.4
-main: com.technovision.homegui.Homegui
+name: PerchHomeGUI
+version: 1.0.0
+main: me.perch.homegui.Homegui
 api-version: 1.13
 depend: [Essentials]
-authors: [TechnoVision]
+authors: [TechnoVision, KayaLambrex]
 commands:
   home:
     description: Opens the HomeGUI screen.
     usage: /<command>
-    aliases: homes
-  h:
-    description: Reloads the HomeGUI config.
-    usage: /<command>
+    aliases: [homes, h]

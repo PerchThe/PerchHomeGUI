@@ -1,7 +1,7 @@
-package com.technovision.homegui.commands;
+package me.perch.homegui.commands;
 
-import com.technovision.homegui.Homegui;
-import com.technovision.homegui.gui.HomeGUI;
+import me.perch.homegui.Homegui;
+import me.perch.homegui.gui.HomeGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,7 +18,6 @@ public class HomeCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            // Home GUI
             if (cmd.getName().equalsIgnoreCase(HOME)) {
                 if (args.length == 0) {
                     HomeGUI gui = new HomeGUI(player.getUniqueId());
@@ -26,10 +25,7 @@ public class HomeCommand implements CommandExecutor {
                 } else if (args.length == 1) {
                     player.performCommand("essentials:home " + args[0]);
                 }
-            }
-
-            // Reload
-            else if (cmd.getName().equalsIgnoreCase(H)) {
+            } else if (cmd.getName().equalsIgnoreCase(H)) {
                 if (args.length == 0) {
                     player.performCommand("homegui:home");
                 } else if (args.length == 1) {
