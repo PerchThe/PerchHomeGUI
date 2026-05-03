@@ -1,14 +1,11 @@
 package me.perch.homegui.playerdata;
 
-import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.Material;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +17,17 @@ public class EssentialsReader {
     public EssentialsReader(String playerID) {
         try {
             fileReader = new YamlConfiguration();
-            File essentialsData = Bukkit.getServer().getPluginManager().getPlugin("Essentials").getDataFolder();
-            File playerData = new File(essentialsData, File.separator + "userdata/" + playerID + ".yml");
-            fileReader.load(playerData);
-            initHomes();
-        } catch (IOException | InvalidConfigurationException e) {
-            System.out.println("[HomeGUI]: ERROR - Cannot find essentials data file! " + e.getMessage());
+            File essentialsFolder = Bukkit.getServer().getPluginManager().getPlugin("Essentials").getDataFolder();
+            File playerData = new File(essentialsFolder, "userdata/" + playerID + ".yml");
+
+            if (playerData.exists()) {
+                fileReader.load(playerData);
+                initHomes();
+            } else {
+                homes = new ArrayList<>();
+            }
+        } catch (Exception e) {
+            Bukkit.getLogger().warning("[HomeGUI] Could not load Essentials data for " + playerID);
             homes = new ArrayList<>();
         }
     }
@@ -35,7 +37,7 @@ public class EssentialsReader {
         ConfigurationSection homesSec = fileReader.getConfigurationSection("homes");
         if (homesSec == null) return;
 
-        Material defaultMat = XMaterial.GRASS_BLOCK.parseMaterial();
+        Material defaultMat = Material.GRASS_BLOCK;
 
         for (String name : homesSec.getKeys(false)) {
             ConfigurationSection h = homesSec.getConfigurationSection(name);

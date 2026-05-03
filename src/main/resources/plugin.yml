@@ -1,7 +1,7 @@
-name: PerchHomeGUI
+name: EvergreenHomeGUI
 version: 1.0.0
 main: me.perch.homegui.Homegui
-api-version: 1.13
+api-version: 1.21
 depend: [Essentials]
 authors: [TechnoVision, KayaLambrex]
 commands:

@@ -1,6 +1,5 @@
 package me.perch.homegui.events;
 
-import com.cryptomorin.xseries.XMaterial;
 import me.perch.homegui.Homegui;
 import me.perch.homegui.gui.ChangeIconGUI;
 import org.bukkit.Material;
@@ -24,19 +23,26 @@ public class HomeEvents implements Listener {
             if (event.getClickedInventory() == null) return;
             Player player = (Player) event.getWhoClicked();
             if (event.getCurrentItem() == null) return;
-            if (event.getCurrentItem().getType() == Material.AIR) return;
+
+            Material type = event.getCurrentItem().getType();
+            if (type == Material.AIR) return;
+
             event.setCancelled(true);
             if (event.getClickedInventory().getType() == InventoryType.PLAYER) return;
 
             if (event.getClick() == ClickType.LEFT) {
-                String itemName = getFriendlyName(event.getCurrentItem().getType());
+                String itemName = getFriendlyName(type);
                 String playerID = player.getUniqueId().toString();
-                XMaterial icon = XMaterial.matchXMaterial(event.getCurrentItem().getType());
                 String homeName = ChangeIconGUI.homes.get(playerID).getName();
-                Homegui.dataReader.write(playerID, homeName, icon.parseMaterial());
-                String msg = Homegui.PLUGIN.getConfig().getString("icon-select-message").replace("&", "§");
-                msg = msg.replace("{home}", homeName);
-                msg = msg.replace("{icon}", itemName);
+
+                // Use the material directly
+                Homegui.dataReader.write(playerID, homeName, type);
+
+                String msg = Homegui.PLUGIN.getConfig().getString("icon-select-message", "")
+                        .replace("&", "§")
+                        .replace("{home}", homeName)
+                        .replace("{icon}", itemName);
+
                 player.sendMessage(msg);
                 player.closeInventory();
             }
@@ -45,19 +51,17 @@ public class HomeEvents implements Listener {
 
     private String format(String s) {
         if (!s.contains("_")) return capitalize(s);
-        String[] j = s.split("_");
-        String c = "";
-        for (String f : j) {
-            f = capitalize(f);
-            c += c.equalsIgnoreCase("") ? f : " " + f;
+        String[] words = s.split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            sb.append(capitalize(word)).append(" ");
         }
-        return c;
+        return sb.toString().trim();
     }
 
     private String capitalize(String text) {
-        String firstLetter = text.substring(0, 1).toUpperCase();
-        String next = text.substring(1).toLowerCase();
-        return firstLetter + next;
+        if (text == null || text.isEmpty()) return "";
+        return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
     }
 
     public String getFriendlyName(Material m) {
